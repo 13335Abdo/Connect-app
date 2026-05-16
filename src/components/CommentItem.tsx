@@ -1,7 +1,7 @@
 import { Spinner, toast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Heart, MoreHorizontal } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FaHeart, FaTrash } from "react-icons/fa";
 import type { UserType } from "../Home/Home";
 import axiosInstance from "../lib/axios";
@@ -20,18 +20,26 @@ export interface CommentItemProps {
     isOwner: boolean;
     commentId: string;
     postId: string;
+    likes: string[];
 }
 
-export default function CommentItem({ isFromReplay, postId, commentId, commentCreator, content, image, createdAt, likesCount, isOwner }: CommentItemProps) {
+export default function CommentItem({ likes, isFromReplay, postId, commentId, commentCreator, content, image, createdAt, likesCount, isOwner }: CommentItemProps) {
 
 
     const [isOpenEdit, setisOpenEdit] = useState(false)
 
-    const [isLiked, setisLiked] = useState(false)
     const [isOpen, setisOpen] = useState(false)
 
     const query = useQueryClient()
 
+    const userId = useMemo<string>(() => {
+        try { return JSON.parse(localStorage.getItem("loggedUser") ?? "{}")._id ?? ""; }
+        catch { return ""; }
+    }, []);
+
+    const [isLiked, setIsLiked] = useState(() =>
+        likes?.includes(userId)
+    );
 
 
     async function likeAndUnlikeComment() {
@@ -51,7 +59,7 @@ export default function CommentItem({ isFromReplay, postId, commentId, commentCr
         onSuccess: () => {
 
             query.invalidateQueries(["GetPostComments", postId])
-            setisLiked(!isLiked)
+            setIsLiked(!isLiked)
 
         },
         onError: () => {
@@ -143,7 +151,7 @@ export default function CommentItem({ isFromReplay, postId, commentId, commentCr
                     </div>
                 </div>
             </div >
-            {isOpenEdit&& <EditComponent setisOpenEdit={setisOpenEdit} postId={postId} commentId={commentId} content={content} image={image}/>}
+            {isOpenEdit && <EditComponent setisOpenEdit={setisOpenEdit} postId={postId} commentId={commentId} content={content} image={image} />}
         </>
     );
 }

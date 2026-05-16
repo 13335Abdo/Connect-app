@@ -44,15 +44,15 @@ export default function ReplayComments({ postId, commentId }: { commentId: strin
     return (
         <>
 
-            <div className="h-px w-5 absolute top-7 inset-s-4 bg-gray-500 rotate-90">
-
-            </div>
-            <div className="h-px w-5 absolute top-[38px] inset-s-7 bg-gray-500">
-
-            </div>
             {isLoading ? <Loading /> : <div>
 
-                {replies?.map((replay) => (
+                {replies?.map((replay) => (<>
+                    <div className="h-px w-5 absolute top-7 inset-s-4 bg-gray-500 rotate-90">
+
+                    </div>
+                    <div className="h-px w-5 absolute top-[38px] inset-s-7 bg-gray-500">
+
+                    </div>
                     <CommentItem
                         isFromReplay={true}
                         key={replay.commentId}
@@ -65,6 +65,7 @@ export default function ReplayComments({ postId, commentId }: { commentId: strin
                         likesCount={replay.likesCount}
                         isOwner={replay.commentCreator._id === userId}
                     />
+                </>
                 ))}
 
 

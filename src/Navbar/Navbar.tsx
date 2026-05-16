@@ -2,7 +2,7 @@ import { Avatar } from "@heroui/react";
 import { useContext, useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import img from "../../public/Gemini_Generated_Image_4viszz4viszz4vis.png";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { authContext } from "../contrext/AuthContext";
 import { userContex } from "../contrext/UserContext";
 
@@ -18,6 +18,7 @@ export default function Navbar() {
   function logOut() {
     settoken(null)
     localStorage.removeItem("token")
+    localStorage.removeItem("loggedUser")
     nav("/login")
   }
 
@@ -107,9 +108,9 @@ export default function Navbar() {
                     <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                       Team Settings
                     </a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Analytics
-                    </a>
+                    <Link to="change-password" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Change Password
+                    </Link>
                     <hr className="my-1" />
                     <button onClick={logOut} className="flex cursor-pointer w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
                       Log Out

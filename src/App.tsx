@@ -14,6 +14,7 @@ import Notifications from "./Notifications/Notifications"
 
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import ChangePassword from "./changePassword/ChangePassword"
 
 const queryClient = new QueryClient()
 
@@ -26,6 +27,7 @@ function App() {
       { path: "/addFriends", element: <ApearsAfterLogin>  <AddFriends />  </ApearsAfterLogin> },
       { path: "/notifications", element: <ApearsAfterLogin>  <Notifications />  </ApearsAfterLogin> },
       { path: "/myProfile", element: <ApearsAfterLogin>  <MyProfile />  </ApearsAfterLogin> },
+      { path: "/change-password", element: <ApearsAfterLogin>  <ChangePassword />  </ApearsAfterLogin> },
     ]
   }])
 

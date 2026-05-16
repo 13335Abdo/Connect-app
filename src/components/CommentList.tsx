@@ -6,10 +6,11 @@ interface Props {
     comments: CommentType["data"]["data"]["comments"];
     commentsCount: number;
     userId: string;
-    postId:string
+    postId: string
 }
 
-export default function CommentList({postId , comments, commentsCount, userId }: Props) {
+export default function CommentList({ postId, comments, commentsCount, userId }: Props) {
+
     return (
         <>
             {/* Label */}
@@ -33,6 +34,7 @@ export default function CommentList({postId , comments, commentsCount, userId }:
                 <div className="flex flex-col gap-3">
                     {comments?.map((comment) => (
                         <CommentItem
+                            likes={comment.likes}
                             key={comment._id}
                             postId={postId}
                             commentId={comment._id}

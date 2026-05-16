@@ -2,6 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import PostDesign from "../components/PostDesign";
 import axiosInstance from "../lib/axios";
 import Loading from "../components/Loading";
+import { useMemo, useState } from "react";
+import { Button, Card, CloseButton } from "@heroui/react";
+import CreatePostPopup from "../components/CreatePostPopup";
 
 export interface UserType {
   _id: string,
@@ -16,6 +19,7 @@ interface CommentType {
   likes: string[],
   parentComment: string,
   post: string,
+  image: string,
   _id: string,
 }
 
@@ -60,8 +64,21 @@ export interface MetaType {
 
 export default function Home() {
 
+  const [isOpened, setisOpened] = useState(false)
 
 
+  const userimage = useMemo<string>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("loggedUser") ?? "{}").photo ?? "";
+    }
+    catch { return ""; }
+  }, []);
+  const userName = useMemo<string>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("loggedUser") ?? "{}").username ?? "";
+    }
+    catch { return ""; }
+  }, []);
 
   function allposts(): Promise<ApiResponseType | null> {
 
@@ -75,6 +92,8 @@ export default function Home() {
     queryKey: ["allposts"],
     queryFn: allposts
   })
+  console.log("postData",data);
+  
 
   const posts = data?.data?.data.posts
 
@@ -95,7 +114,24 @@ export default function Home() {
   return (
     <>
 
-      <div className="w-1/2 m-auto mt-2">
+
+      <div className="w-1/2 m-auto mt-2 relative">
+
+        <button onClick={() => setisOpened(!isOpened)} className="bg-white border my-3 cursor-pointer border-gray-200 rounded-xl px-4 py-3 flex items-center gap-3 w-full">
+          <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
+            <img src={userimage} alt="user" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1 bg-gray-100 rounded-full px-4 py-2 cursor-text">
+            <input
+              type="text"
+              placeholder="What's on your mind?"
+              className="w-full bg-transparent text-sm text-gray-500 outline-none"
+            />
+          </div>
+        </button>
+
+        {isOpened && <CreatePostPopup userimage={userimage} setisOpened={setisOpened} userName={userName} />}
+
 
 
         {posts?.map((post) => <PostDesign key={post._id} post={post} />)}
