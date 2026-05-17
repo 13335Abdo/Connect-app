@@ -5,6 +5,10 @@ import { IoAttachOutline } from "react-icons/io5"
 import { Spinner, toast } from "@heroui/react"
 import { Send } from "lucide-react"
 import { useForm } from "react-hook-form"
+interface ValuesType{
+    content:string,
+    image?: FileList;
+}
 
 export default function CreateReplayComment({ postId, commentId }: { postId: string, commentId: string }) {
 
@@ -21,7 +25,7 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
 
     const imageFile = watch("image");
 
-    function createComment(values) {
+    function createComment(values:ValuesType) {
 
         const formData = new FormData();
         if (values.content) {
@@ -40,7 +44,7 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
 
             reset();
 
-            client.invalidateQueries(["GetPostComments", postId])
+            client.invalidateQueries({queryKey:["GetPostComments", postId]})
             setisOpen(false)
 
         },
@@ -54,7 +58,7 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
         <>
             <button onClick={()=>setisOpen(true)} className="hover:text-blue-500 transition-colors cursor-pointer">replay</button>
             {isOpen && <form
-                onSubmit={handleSubmit(mutate)}
+                onSubmit={handleSubmit((values) => mutate(values))}
                 className="relative flex items-center gap-2.5 flex-1"
             >
                 <input
