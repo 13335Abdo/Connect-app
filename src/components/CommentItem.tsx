@@ -9,6 +9,7 @@ import ReplayComments from "./ReplayComments";
 import CreateReplayComment from "./CreateReplayComment";
 import { MdEdit } from "react-icons/md";
 import EditComponent from "./EditComponent";
+import { Link } from "react-router-dom";
 
 export interface CommentItemProps {
     isFromReplay?: false
@@ -95,11 +96,15 @@ export default function CommentItem({ likes, isFromReplay, postId, commentId, co
         <>
 
             <div className="flex gap-2.5">
-                <img src={commentCreator.photo} alt={commentCreator.name} className="w-8 h-8 rounded-full object-cover shrink-0 mt-0.5" />
+                <Link to={`/userData/${commentCreator._id}`}>
+                    <img src={commentCreator.photo} alt={commentCreator.name} className="w-8 h-8 rounded-full object-cover shrink-0 mt-0.5" />
+                </Link>
                 <div className="flex-1">
                     <div className="bg-gray-50 rounded-[0_10px_10px_10px] px-3 py-2 border border-gray-100">
                         <div className="flex justify-between items-center relative">
-                            <p className="text-[12px] font-semibold text-gray-900">{commentCreator.name}</p>
+                            <Link to={`/userData/${commentCreator._id}`}>
+                                <p className="text-[12px] font-semibold text-gray-900">{commentCreator.name}</p>
+                            </Link>
                             {isOwner && (
                                 <button onClick={() => setisOpen(!isOpen)} className="p-1.5 rounded-full hover:bg-gray-200 cursor-pointer">
                                     <MoreHorizontal size={20} />

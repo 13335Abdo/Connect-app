@@ -7,6 +7,7 @@ import { MdEdit } from "react-icons/md";
 import type { PostType } from "../Home/Home";
 import axiosInstance from "../lib/axios";
 import EditPostPopup from "./EditPostPopup";
+import { Link } from "react-router-dom";
 
 interface Props {
     post: PostType;
@@ -43,7 +44,7 @@ export default function PostSummary({ post, showControls = false, userId }: Prop
                 {/* Header */}
                 <div className="flex items-center gap-2.5 mb-2">
                     <img src={post.user.photo} alt={post.user.name} className="w-9 h-9 rounded-full object-cover shrink-0 cursor-pointer" />
-                    <div className="flex-1 min-w-0">
+                    <Link to={`/userData/${post.user._id}`} className="flex-1 min-w-0">
                         <p className="text-[13px] font-semibold text-gray-900 cursor-pointer hover:underline leading-tight">
                             {post.user.name}
                         </p>
@@ -57,7 +58,7 @@ export default function PostSummary({ post, showControls = false, userId }: Prop
                             <span className="text-gray-400 text-[12px]">·</span>
                             <Globe size={11} className="text-gray-500" />
                         </div>
-                    </div>
+                    </Link>
                     {showControls && (
                         <div className="relative flex items-center gap-0.5">
                             {/* _________________هعملها هنا ___________________*/}
@@ -76,9 +77,6 @@ export default function PostSummary({ post, showControls = false, userId }: Prop
                                         {isPending ? <> <Spinner color="danger" size="sm" /> Loading...</> : <> <FaTrash size={13} /> Delete</>}
                                     </button>
                                 </div>}
-                            <button className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors">
-                                <X size={18} />
-                            </button>
                         </div>
                     )}
                 </div>
@@ -87,7 +85,7 @@ export default function PostSummary({ post, showControls = false, userId }: Prop
 
                 {post.isShare && <div className="flex items-center gap-2.5 mb-2">
                     <img src={post.sharedPost.user.photo} alt={post.sharedPost.user.name} className="w-9 h-9 rounded-full object-cover shrink-0 cursor-pointer" />
-                    <div className="flex-1 min-w-0">
+                    <Link to={`/userData/${post.sharedPost.user._id}`} className="flex-1 min-w-0">
                         <p className="text-[13px] font-semibold text-gray-900 cursor-pointer hover:underline leading-tight">
                             {post.sharedPost.user.name}
                         </p>
@@ -101,7 +99,7 @@ export default function PostSummary({ post, showControls = false, userId }: Prop
                             <span className="text-gray-400 text-[12px]">·</span>
                             <Globe size={11} className="text-gray-500" />
                         </div>
-                    </div>
+                    </Link>
                 </div>}
 
                 {/* Body */}

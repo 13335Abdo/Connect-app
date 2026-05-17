@@ -15,8 +15,12 @@ export default function CommentPopup({ post, isLiked, setIsLiked ,isOpen,setIsOp
         catch { return ""; }
     }, []);
 
+    function getPostComment(){
+        return axiosInstance.get(`/posts/${post._id}/comments?page=1&limit=10`)
+    }
+
     const { data, error } = useQuery<CommentType | null>({
-        queryFn: async () => (await axiosInstance.get(`/posts/${post._id}/comments?page=1&limit=10`)),
+        queryFn:  getPostComment ,
         queryKey: ["GetPostComments", post._id],
     });
 

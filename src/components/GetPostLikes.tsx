@@ -1,60 +1,34 @@
-import { X, UserPlus, Check } from "lucide-react";
+import { Spinner } from "@heroui/react";
+import { useQuery } from "@tanstack/react-query";
+import { X } from "lucide-react";
 import { FaHeart } from "react-icons/fa";
-import { useMemo, useState } from "react";
-import type { UserType } from "../Home/Home";
 import axiosInstance from "../lib/axios";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Loading from "./Loading";
-import { Spinner, toast } from "@heroui/react";
 
 interface Props {
     setisOpened: (x: boolean) => void;
-    postId: string
+    postId: string;
 }
 
 export default function GetPostLikes({ setisOpened, postId }: Props) {
-    const client = useQueryClient()
-    const [addedUsers, setAddedUsers] = useState(false);
 
-    const handleAddFriend = (userId: string) => {
-        return axiosInstance.put(`/users/${userId}/follow`)
-    };
-    const{mutate,isPending} = useMutation({
-        mutationFn:handleAddFriend,
-        mutationKey:["handleAddFriend"],
-        onSuccess:(data)=>{
-            console.log("datttttttta",data);
-            
-            setAddedUsers(!addedUsers)
-        },
-        onError:()=>{
-            toast.danger("unexpected erorr")
-        }
-    })
+    // 📌 دي list بالـ IDs بتاعت الناس اللي عملتلهم follow
+    // مثلاً: ["abc123", "xyz456"]
+    
 
-    const userId = useMemo<string>(() => {
-        try { return JSON.parse(localStorage.getItem("loggedUser") ?? "{}")._id ?? ""; }
-        catch { return ""; }
-    }, []);
-
-    function getLikes() {
-
-        return axiosInstance.get(`/posts/${postId}/likes?page=1&limit=20`)
-
+    async function getLikes() {
+        return (await axiosInstance.get(`/posts/${postId}/likes?page=1&limit=20`)).data;
     }
-    const { data, isLoading, isFetching, error } = useQuery({
+
+    const { data, isLoading, isFetching } = useQuery({
         queryKey: ["getLikes", postId],
-        queryFn: getLikes
-    })
-    console.log("dataaaaaaaa", data);
-    console.log("isLoading", isLoading);
-    console.log("error", error);
-    const likes = data?.data?.data?.likes
+        queryFn: getLikes,
+    });
+
+    const likes = data?.data?.likes;
 
     if (isLoading || isFetching) {
         return (
-            <div
-                className="fixed inset-0 z-50 bg-black/45 flex items-center justify-center p-4"
+            <div className="fixed inset-0 z-50 bg-black/45 flex items-center justify-center p-4"
                 onClick={(e) => e.target === e.currentTarget && setisOpened(false)}
             >
                 <div className="bg-white rounded-xl w-full max-w-[380px] border border-gray-100 shadow-xl flex items-center justify-center py-16">
@@ -64,11 +38,8 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
         );
     }
 
-
-
     return (
-        <div
-            className="fixed inset-0 z-50 bg-black/45 flex items-center justify-center p-4"
+        <div className="fixed inset-0 z-50 bg-black/45 flex items-center justify-center p-4"
             onClick={(e) => e.target === e.currentTarget && setisOpened(false)}
         >
             <div className="bg-white rounded-xl w-full max-w-[380px] overflow-hidden border border-gray-100 shadow-xl">
@@ -97,8 +68,9 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
                         </p>
                     </div>
                 ) : (
-                    <div className="flex flex-col max-h-[360px] overflow-y-auto py-2">
+                    <div className="flex flex-col max-h-90 overflow-y-auto py-2">
                         {likes?.map((user) => {
+
                             return (
                                 <div key={user._id} className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors">
                                     {/* Avatar */}
@@ -115,25 +87,8 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
                                         <span className="text-[12px] text-gray-400">@{user.username}</span>
                                     </div>
 
-                                    {/* Add friend btn */}
-
-                                    {userId == user._id ? <p className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium transition-colors shrink-0 bg-gray-100 text-gray-400">it is you</p> :
-                                        <>
-                                            <button
-                                                onClick={()=>{mutate(user._id)}}
-                                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium transition-colors shrink-0 cursor-pointer ${addedUsers
-                                                    ? "bg-gray-100 text-gray-400"
-                                                    : "bg-violet-100 text-violet-600 hover:bg-violet-200"
-                                                    }`}
-                                            >
-                                                {isPending? <Spinner /> : <>
-                                                
-
-                                                {addedUsers ? <Check size={13} /> : <UserPlus size={13} />}
-                                                {addedUsers ? "unfollow" : "follow"}
-                                                </>}
-                                            </button>
-                                        </>}
+                                    {/* 📌 لو ده انت مش هيظهر زرار follow */}
+                                    
                                 </div>
                             );
                         })}
