@@ -42,7 +42,8 @@ export default function CreateComment({ postId }: { postId: string }) {
     const { mutate, isPending } = useMutation({
         mutationFn: onSubmit,
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ["GetPostComments", postId] });
+            // @ts-ignore
+            queryClient.invalidateQueries(["GetPostComments", postId] );
             toast.success(data.data.message);
             reset();
         },
