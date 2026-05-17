@@ -5,14 +5,14 @@ import { IoAttachOutline } from "react-icons/io5"
 import { Spinner, toast } from "@heroui/react"
 import { Send } from "lucide-react"
 import { useForm } from "react-hook-form"
-interface ValuesType{
-    content:string,
+interface ValuesType {
+    content: string,
     image?: FileList;
 }
 
 export default function CreateReplayComment({ postId, commentId }: { postId: string, commentId: string }) {
 
-    const { register, handleSubmit ,reset,watch } = useForm({
+    const { register, handleSubmit, reset, watch } = useForm({
         defaultValues: {
             content: "",
             image: undefined as FileList | undefined,
@@ -25,7 +25,7 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
 
     const imageFile = watch("image");
 
-    function createComment(values:ValuesType) {
+    function createComment(values: ValuesType) {
 
         const formData = new FormData();
         if (values.content) {
@@ -35,7 +35,7 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
             formData.append("image", values.image[0]);
         }
 
-        return axiosInstance.post(`/posts/${postId}/comments/${commentId}/replies`,formData)
+        return axiosInstance.post(`/posts/${postId}/comments/${commentId}/replies`, formData)
     }
     const { isPending, mutate } = useMutation({
         mutationFn: createComment,
@@ -43,8 +43,8 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
         onSuccess: () => {
 
             reset();
-
-            client.invalidateQueries({queryKey:["GetPostComments", postId]})
+            //@ts-ignore
+            client.invalidateQueries(["GetPostComments", postId])
             setisOpen(false)
 
         },
@@ -56,7 +56,7 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
 
     return (
         <>
-            <button onClick={()=>setisOpen(true)} className="hover:text-blue-500 transition-colors cursor-pointer">replay</button>
+            <button onClick={() => setisOpen(true)} className="hover:text-blue-500 transition-colors cursor-pointer">replay</button>
             {isOpen && <form
                 onSubmit={handleSubmit((values) => mutate(values))}
                 className="relative flex items-center gap-2.5 flex-1"
