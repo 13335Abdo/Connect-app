@@ -21,7 +21,10 @@ interface replies {
 export default function ReplayComments({ postId, commentId }: { commentId: string, postId: string }) {
 
 
-    const userId = JSON.parse(localStorage.getItem("loggedUser"))
+    const userId = (() => {
+        try { return JSON.parse(localStorage.getItem("loggedUser") ?? "{}")._id ?? ""; }
+        catch { return ""; }
+    })()
 
     function getCommentsReplay(): Promise<rplay> {
 
@@ -64,6 +67,7 @@ export default function ReplayComments({ postId, commentId }: { commentId: strin
                         createdAt={replay.createdAt}
                         likesCount={replay.likesCount}
                         isOwner={replay.commentCreator._id === userId}
+                        likes={replay.likes}
                     />
                 </>
                 ))}

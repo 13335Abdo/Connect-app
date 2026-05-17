@@ -1,15 +1,12 @@
 import { useMemo, useState } from 'react'
 import axiosInstance from '../lib/axios';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Spinner, toast } from '@heroui/react';
 import { Check, UserPlus } from 'lucide-react';
 import type { dataTypeOfGetUserProfile } from './UserData';
 
 
-export default function FollowButton({ userAccount }:{userAccount:dataTypeOfGetUserProfile}) {
-
-    const { user } = userAccount
-
+export default function FollowButton({ userId: profileUserId }: { userId: string }) {
     const client = useQueryClient()
 
     const userId = useMemo<string>(() => {
@@ -17,7 +14,16 @@ export default function FollowButton({ userAccount }:{userAccount:dataTypeOfGetU
         catch { return ""; }
     }, []);
 
-    const [isFollowing, setIsFollowing] = useState(userAccount.isFollowing ?? false);
+    const { data: userAccount, isLoading } = useQuery<dataTypeOfGetUserProfile>({
+        queryKey: ["followUserProfile", profileUserId],
+        queryFn: async () => {
+            const { data } = await axiosInstance.get(`/users/${profileUserId}/profile`);
+            return data.data;
+        },
+        enabled: Boolean(profileUserId),
+    });
+
+    const [optimisticFollowing, setOptimisticFollowing] = useState<boolean | null>(null);
 
     const handleFollow = (userId: string) => {
         return axiosInstance.put(`/users/${userId}/follow`);
@@ -26,13 +32,21 @@ export default function FollowButton({ userAccount }:{userAccount:dataTypeOfGetU
     const { mutate, isPending } = useMutation({
         mutationFn: handleFollow,
         onSuccess: () => {
-            client.invalidateQueries(["userProfile", userId])
-            setIsFollowing((prev) => !prev);
+            client.invalidateQueries({ queryKey: ["userProfile", profileUserId] })
+            client.invalidateQueries({ queryKey: ["followUserProfile", profileUserId] })
+            setOptimisticFollowing((prev) => !(prev ?? userAccount?.isFollowing ?? false));
         },
         onError: () => {
             toast.danger("unexpected error");
         },
     });
+
+    const user = userAccount?.user;
+    const isFollowing = optimisticFollowing ?? userAccount?.isFollowing ?? false;
+
+    if (isLoading || !user) {
+        return <Spinner size="sm" />;
+    }
 
     if (userId === user._id) {
         return (

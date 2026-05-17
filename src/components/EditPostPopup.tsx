@@ -1,5 +1,5 @@
 import { X, Image } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import axiosInstance from "../lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -11,10 +11,13 @@ interface Props {
     currentImage?: string;
     setisOpenEditPost: (x: boolean) => void;
 }
+type FormValues = {
+    body: string;
+    image?: FileList;
+};
 
 export default function EditPostPopup({ postId, setisOpenEditPost, currentBody, currentImage }: Props) {
     const [previewImage, setPreviewImage] = useState<string | null>(currentImage ?? null);
-    const fileRef = useRef<HTMLInputElement>(null);
     const client = useQueryClient();
 
         const userName = useMemo<string>(() => {
@@ -26,16 +29,16 @@ export default function EditPostPopup({ postId, setisOpenEditPost, currentBody, 
             catch { return ""; }
         }, []);
 
-    const { handleSubmit, register, setValue } = useForm({
+    const { handleSubmit, register } = useForm<FormValues>({
         defaultValues: {
             body: currentBody,
-            image: "",
+            image: undefined,
         }
     });
 
 
 
-    function editPost(values) {
+    function editPost(values: FormValues) {
         const formData = new FormData();
         if (values.body) formData.append("body", values.body);
         if (values.image?.[0]) formData.append("image", values.image[0]);
@@ -47,10 +50,10 @@ export default function EditPostPopup({ postId, setisOpenEditPost, currentBody, 
         onSuccess: () => {
             toast.success("Post updated successfully");
             setisOpenEditPost(false);
-            client.invalidateQueries(["allposts"]);
+            client.invalidateQueries({ queryKey: ["allposts"] });
         },
         onError: () => {
-            toast.error("Unexpected error");
+            toast.danger("Unexpected error");
         }
     });
 
@@ -63,7 +66,7 @@ export default function EditPostPopup({ postId, setisOpenEditPost, currentBody, 
         <div className="fixed inset-0 z-50 bg-black/45 flex items-center justify-center p-4"
             onClick={(e) => e.target === e.currentTarget && setisOpenEditPost(false)}
         >
-            <form onSubmit={handleSubmit(mutate)} className="bg-white rounded-xl w-full max-w-[520px] overflow-hidden border border-gray-100 shadow-xl">
+            <form onSubmit={handleSubmit((values) => mutate(values))} className="bg-white rounded-xl w-full max-w-[520px] max-h-[90vh] overflow-y-auto border border-gray-100 shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100">
                     <span className="text-[15px] font-semibold text-gray-900">Edit post</span>
@@ -97,7 +100,7 @@ export default function EditPostPopup({ postId, setisOpenEditPost, currentBody, 
                     <div className="flex items-center justify-between">
                         <label className="w-9 h-9 rounded-lg flex items-center justify-center cursor-pointer text-gray-500 hover:bg-gray-100 transition-colors">
                             <Image size={20} />
-                            <input type="file" ref={fileRef} {...register("image", { onChange: handleImage })} accept="image/*" className="hidden" />
+                            <input type="file" {...register("image", { onChange: handleImage })} accept="image/*" className="hidden" />
                         </label>
                         <button type="submit" disabled={isPending} className="bg-purple-500 hover:bg-purple-600 disabled:opacity-50 text-white text-[14px] font-medium px-5 py-2 rounded-full transition-colors cursor-pointer">
                             {isPending ? "Saving..." : "Save changes"}

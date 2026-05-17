@@ -9,6 +9,7 @@ import PostSummary from "./PostSummary";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import SharePost from "./SharePost";
 import GetPostLikes from "./GetPostLikes";
+import axios from "axios";
 
 export interface CommentType {
     data: {
@@ -30,7 +31,7 @@ interface CommentData {
 }
 export interface comentFormat {
     content: string;
-    image: string;
+    image?: FileList;
 }
 
 export default function PostDesign({ post }: { post: PostType }) {
@@ -56,13 +57,12 @@ export default function PostDesign({ post }: { post: PostType }) {
     const { mutate: markMutate } = useMutation({
         mutationFn: bookMarkAndUnBook,
         mutationKey: ["bookMarkAndUnBook"],
-        onSuccess: (data) => {
-            client.invalidateQueries(["allposts"])
-            console.log("data", data);
+        onSuccess: () => {
+            client.invalidateQueries({ queryKey: ["allposts"] })
             setisSaved(!post.bookmarked)
         },
         onError: (erorr) => {
-            console.log("erorr", erorr.response);
+            console.log("erorr", axios.isAxiosError(erorr) ? erorr.response : erorr);
             toast.danger("unexpected erorr")
         }
     })
@@ -77,8 +77,8 @@ export default function PostDesign({ post }: { post: PostType }) {
 
 
             console.log("data from like post", data);
-            client.invalidateQueries(["allposts"])
-            client.invalidateQueries( ["getLikes", post.id])
+            client.invalidateQueries({ queryKey: ["allposts"] })
+            client.invalidateQueries({ queryKey: ["getLikes", post.id] })
             setIsLiked(!isLiked)
 
 
@@ -96,8 +96,6 @@ export default function PostDesign({ post }: { post: PostType }) {
         <div className="bg-white border border-gray-200 rounded-lg mb-3 overflow-hidden">
             <PostSummary
                 post={post}
-                isLiked={isLiked}
-                onLike={() => setIsLiked(!isLiked)}
                 showControls
                 userId={userId}
             />
@@ -127,12 +125,12 @@ export default function PostDesign({ post }: { post: PostType }) {
                     {isPending ? <Spinner /> : <Heart size={18} className={isLiked ? "fill-red-500" : ""} />}
                     Like
                 </button>
-                <CommentPopup isOpen={isOpen} setIsOpen={setIsOpen} post={post} isLiked={isLiked} setIsLiked={setIsLiked} />
+                <CommentPopup isOpen={isOpen} setIsOpen={setIsOpen} post={post} />
                 <button onClick={() => setisOpened(true)} className="cursor-pointer flex items-center justify-center gap-2 py-2 rounded-md text-[13px] font-semibold text-gray-600 hover:bg-gray-100 transition-colors">
                     <Share2 size={18} />
                     Share
                 </button>
-                <button onClick={markMutate} className={`cursor-pointer flex items-center justify-center gap-2 py-2 rounded-md text-[13px] font-semibold ${isSaved ? "text-blue-600" : "text-gray-600"} hover:bg-gray-100 transition-colors`}>
+                <button onClick={() => markMutate()} className={`cursor-pointer flex items-center justify-center gap-2 py-2 rounded-md text-[13px] font-semibold ${isSaved ? "text-blue-600" : "text-gray-600"} hover:bg-gray-100 transition-colors`}>
                     {isSaved ? <FaBookmark size={18} color="blue" /> : <FaRegBookmark size={18} />}
                     Bookmark
                 </button>

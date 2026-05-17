@@ -30,7 +30,7 @@ export default function UserPosts({ userId }: { userId: string }) {
     return (
         <>
 
-            {data?.map((post) => <PostDesign post={post} />)}
+            {data?.map((post) => <PostDesign key={post._id} post={post} />)}
 
 
 

@@ -2,14 +2,12 @@ import { Input, Button, Label, toast, Spinner } from "@heroui/react";
 import imge from "../assets/signUpimage.avif";
 import img from "../../public/Gemini_Generated_Image_4viszz4viszz4vis.png";
 import { Controller, useForm } from "react-hook-form";
-import axios from 'axios';
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { authContext } from "../contrext/AuthContext";
 import axiosInstance from "../lib/axios";
-import { userContex } from "../contrext/UserContext";
 
 const schema = z.object(
   {
@@ -131,7 +129,7 @@ export default function Login() {
       </div>
 
       {/* Right Panel - Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-8 py-10 sm:py-12 bg-white">
         <div className="w-full max-w-md">
           <h2 className="text-2xl font-semibold text-gray-800 mb-1">Sign in</h2>
           <p className="text-sm text-gray-400 mb-8">Enter your credentials to access your account</p>

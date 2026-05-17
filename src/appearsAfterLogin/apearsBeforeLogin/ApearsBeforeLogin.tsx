@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom'
+import type { ReactNode } from "react"
 
-export default function ApearsBeforeLogin({children}) {
+export default function ApearsBeforeLogin({children}: { children: ReactNode }) {
 
      const getItem = localStorage.getItem("token")
 

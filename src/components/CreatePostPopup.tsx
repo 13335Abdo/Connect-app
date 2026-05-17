@@ -1,27 +1,32 @@
-import { X, Image, Smile, AtSign } from "lucide-react";
-import { useRef, useState } from "react";
+import { X, Image } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axiosInstance from "../lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@heroui/react";
+import axios from "axios";
 
 interface Props {
     userimage: string;
     userName: string;
     setisOpened: (x: boolean) => void
 }
+type FormValues = {
+    body: string;
+    image?: FileList;
+};
 
 export default function CreatePostPopup({ setisOpened, userimage, userName }: Props) {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const client = useQueryClient()
 
-    const { handleSubmit, register ,setValue} = useForm({
+    const { handleSubmit, register, resetField } = useForm<FormValues>({
         defaultValues: {
             body: "",
-            image: "",
+            image: undefined,
         }
     })
-    function createPost(values) {
+    function createPost(values: FormValues) {
         const formData = new FormData()
         if (values.body) {
             formData.append("body", values.body)
@@ -42,15 +47,16 @@ export default function CreatePostPopup({ setisOpened, userimage, userName }: Pr
             
             setisOpened(false)
 
-            client.invalidateQueries(["allposts"])
+            client.invalidateQueries({ queryKey: ["allposts"] })
 
 
             
         },
         onError: (error) => {
-            console.log("error", error.response.data.message);
-            
-            toast.danger(error.response.data.message)
+            const message = axios.isAxiosError(error)
+                ? error.response?.data?.message ?? "unexpected error"
+                : "unexpected error";
+            toast.danger(message)
             
             setisOpened(false)
         }
@@ -66,7 +72,7 @@ export default function CreatePostPopup({ setisOpened, userimage, userName }: Pr
             className="fixed inset-0 z-50 bg-black/45 flex items-center justify-center p-4"
         // onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <form onSubmit={handleSubmit(mutate)} className="bg-white rounded-xl w-full max-w-130 overflow-hidden border border-gray-100 shadow-xl">
+            <form onSubmit={handleSubmit((values) => mutate(values))} className="bg-white rounded-xl w-full max-w-[520px] max-h-[90vh] overflow-y-auto border border-gray-100 shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100">
                     <span className="text-[15px] font-medium text-gray-900">Create post</span>
@@ -95,7 +101,8 @@ export default function CreatePostPopup({ setisOpened, userimage, userName }: Pr
                         <div className="relative rounded-lg overflow-hidden border border-gray-100">
                             <img src={previewImage} alt="preview" className="w-full h-45 object-cover" />
                             <button
-                                onClick={() => { setPreviewImage(null); setValue("image","") }}
+                                type="button"
+                                onClick={() => { setPreviewImage(null); resetField("image") }}
                                 className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/55 flex items-center justify-center text-white"
                             >
                                 <X size={14} />
@@ -115,7 +122,7 @@ export default function CreatePostPopup({ setisOpened, userimage, userName }: Pr
                                 })} accept="image/*" className="hidden" />
                             </label>
                         </div>
-                        <button className="bg-purple-500 hover:bg-purple-600 text-white text-[14px] font-medium px-5 py-2 rounded-full transition-colors">
+                        <button type="submit" className="bg-purple-500 hover:bg-purple-600 text-white text-[14px] font-medium px-5 py-2 rounded-full transition-colors">
                             Post
                         </button>
                     </div>

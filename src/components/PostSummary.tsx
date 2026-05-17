@@ -1,6 +1,6 @@
 import { Spinner, toast } from "@heroui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Globe, MoreHorizontal, X } from "lucide-react";
+import { Globe, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -29,7 +29,7 @@ export default function PostSummary({ post, showControls = false, userId }: Prop
         mutationKey: ["deletePost"],
         onSuccess: () => {
             toast.success("post Deleted successfully")
-            client.invalidateQueries(["allposts"])
+            client.invalidateQueries({ queryKey: ["allposts"] })
 
         },
         onError: () => {
@@ -73,7 +73,7 @@ export default function PostSummary({ post, showControls = false, userId }: Prop
                                         <MdEdit size={15} />
                                         Edit
                                     </button>
-                                    <button onClick={mutate} className="flex items-center gap-2 px-3 py-2 rounded-md text-[13px] font-medium text-red-500 hover:bg-red-50 transition-colors w-full cursor-pointer">
+                                    <button onClick={() => mutate()} className="flex items-center gap-2 px-3 py-2 rounded-md text-[13px] font-medium text-red-500 hover:bg-red-50 transition-colors w-full cursor-pointer">
                                         {isPending ? <> <Spinner color="danger" size="sm" /> Loading...</> : <> <FaTrash size={13} /> Delete</>}
                                     </button>
                                 </div>}

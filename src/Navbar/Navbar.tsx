@@ -4,7 +4,6 @@ import { FiMenu, FiX } from "react-icons/fi";
 import img from "../../public/Gemini_Generated_Image_4viszz4viszz4vis.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { authContext } from "../contrext/AuthContext";
-import { userContex } from "../contrext/UserContext";
 
 export default function Navbar() {
 

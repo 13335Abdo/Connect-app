@@ -1,11 +1,10 @@
 import { X } from "lucide-react";
-import FollowButton from "./FollowButton";
 import { Link } from "react-router-dom";
 
 interface UserItem {
     _id: string;
     name: string;
-    username: string;
+    username?: string;
     photo: string;
 }
 

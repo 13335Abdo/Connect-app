@@ -3,7 +3,6 @@ import PostDesign from "../components/PostDesign";
 import axiosInstance from "../lib/axios";
 import Loading from "../components/Loading";
 import { useMemo, useState } from "react";
-import { Button, Card, CloseButton } from "@heroui/react";
 import CreatePostPopup from "../components/CreatePostPopup";
 
 export interface UserType {
@@ -29,7 +28,7 @@ export interface PostType {
   body: string,
   image: string,
   privacy: string,
-  sharedPost: string,
+  sharedPost: PostType,
   likes: string[],
   createdAt: string,
   commentsCount: number,
@@ -92,7 +91,7 @@ export default function Home() {
     queryKey: ["allposts"],
     queryFn: allposts
   })
-  console.log("postData",data);
+  console.log("postData", data);
   
 
   const posts = data?.data?.data.posts
@@ -115,7 +114,7 @@ export default function Home() {
     <>
 
 
-      <div className="w-1/2 m-auto mt-2 relative">
+      <div className="w-full max-w-2xl mx-auto mt-2 px-3 sm:px-4 relative">
 
         <button onClick={() => setisOpened(!isOpened)} className="bg-white border my-3 cursor-pointer border-gray-200 rounded-xl px-4 py-3 flex items-center gap-3 w-full">
           <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">

@@ -4,6 +4,13 @@ import { X } from "lucide-react";
 import { FaHeart } from "react-icons/fa";
 import axiosInstance from "../lib/axios";
 
+interface LikedUser {
+    _id: string;
+    photo: string;
+    name: string;
+    username: string;
+}
+
 interface Props {
     setisOpened: (x: boolean) => void;
     postId: string;
@@ -24,7 +31,7 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
         queryFn: getLikes,
     });
 
-    const likes = data?.data?.likes;
+    const likes: LikedUser[] = data?.data?.likes ?? [];
 
     if (isLoading || isFetching) {
         return (
@@ -48,7 +55,7 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
                     <div className="flex items-center gap-2">
                         <span className="text-[15px] font-semibold text-gray-900">People who liked this</span>
                         <span className="text-[12px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                            {likes?.length} likes
+                            {likes.length} likes
                         </span>
                     </div>
                     <button onClick={() => setisOpened(false)} className="cursor-pointer w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
@@ -57,7 +64,7 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
                 </div>
 
                 {/* Empty state */}
-                {likes?.length === 0 ? (
+                {likes.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 px-6 gap-3">
                         <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
                             <FaHeart size={28} className="text-red-200" />
@@ -69,7 +76,7 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
                     </div>
                 ) : (
                     <div className="flex flex-col max-h-90 overflow-y-auto py-2">
-                        {likes?.map((user) => {
+                        {likes.map((user) => {
 
                             return (
                                 <div key={user._id} className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors">

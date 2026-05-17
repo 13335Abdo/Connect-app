@@ -33,6 +33,7 @@ interface userData {
 }
 interface follwers {
     _id: string,
+    username?: string,
     photo: string,
     name: string,
     id: string,
@@ -45,7 +46,7 @@ export default function UserData() {
 
     const params = useParams()
     console.log("params", params.usrID);
-    const userId = params.usrID
+    const userId = params.usrID ?? ""
 
     async function userProfile(): Promise<getUserProfile> {
 
@@ -56,6 +57,7 @@ export default function UserData() {
     const { data, isLoading, error } = useQuery({
         queryKey: ["userProfile", userId],
         queryFn: userProfile,
+        enabled: Boolean(userId),
     })
     console.log("dataasasasas", data);
 
@@ -67,16 +69,33 @@ export default function UserData() {
 
     if (error) {
 
-        return null
+        return (
+            <div className="w-full max-w-2xl mx-auto mt-6 px-3 sm:px-4">
+                <div className="bg-white border border-gray-100 rounded-xl p-5 text-center text-sm text-gray-500">
+                    User profile could not be loaded.
+                </div>
+            </div>
+        )
 
     }
+
+    if (!data?.data || !userId) {
+        return (
+            <div className="w-full max-w-2xl mx-auto mt-6 px-3 sm:px-4">
+                <div className="bg-white border border-gray-100 rounded-xl p-5 text-center text-sm text-gray-500">
+                    User profile was not found.
+                </div>
+            </div>
+        )
+    }
+
 
 
     return (
 
-        <div className="w-1/2 m-auto mt-2 relative">
+        <div className="w-full max-w-2xl mx-auto mt-2 px-3 sm:px-4 relative">
 
-            <UserAccountDetails userAccount={data?.data}/>
+            <UserAccountDetails userAccount={data.data} />
             <UserPosts userId={userId} />
 
         </div>

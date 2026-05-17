@@ -11,6 +11,7 @@ type EditComponentProps = {
     content: string;
     postId: string;
     commentId: string;
+    setisOpenEdit: (x: boolean) => void;
 };
 
 type FormValues = {
@@ -84,7 +85,7 @@ export default function EditComponent({
     });
 
     return (
-        <Card className="w-[320px] p-4 gap-4 relative shadow-lg rounded-2xl">
+        <Card className="w-full max-w-[320px] p-4 gap-4 relative shadow-lg rounded-2xl">
 
             {/* Image Preview */}
             <div className="relative w-fit">
@@ -108,7 +109,7 @@ export default function EditComponent({
 
             <CardHeader className="p-0">
                 <form
-                    onSubmit={handleSubmit(editCommentMutate)}
+                    onSubmit={handleSubmit((values) => editCommentMutate(values))}
                     className="flex flex-col gap-4 w-full"
                 >
 

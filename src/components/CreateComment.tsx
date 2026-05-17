@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import axiosInstance from "../lib/axios";
 import type { comentFormat } from "./PostDesign";
 import { IoAttachOutline } from "react-icons/io5";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import axios from "axios";
 interface LoggedUser {
     photo?: string;
@@ -13,6 +13,7 @@ interface LoggedUser {
 }
 export default function CreateComment({ postId }: { postId: string }) {
     const queryClient = useQueryClient();
+    const [hasImage, setHasImage] = useState(false);
     const loged = useMemo<LoggedUser | null>(() => {
         try {
             const raw = localStorage.getItem("loggedUser");
@@ -21,13 +22,12 @@ export default function CreateComment({ postId }: { postId: string }) {
             return null;
         }
     }, []);
-    const { register, handleSubmit, reset, watch } = useForm({
+    const { register, handleSubmit, reset } = useForm<comentFormat>({
         defaultValues: {
             content: "",
             image: undefined as FileList | undefined,
         },
     });
-    const imageFile = watch("image");
     function onSubmit(values: comentFormat) {
         const formData = new FormData();
         if (values.content) {
@@ -71,7 +71,7 @@ export default function CreateComment({ postId }: { postId: string }) {
             </div>
             {/* Form */}
             <form
-                onSubmit={handleSubmit(mutate)}
+                onSubmit={handleSubmit((values) => mutate(values))}
                 className="relative flex items-center gap-2.5 flex-1"
             >
                 <input
@@ -84,11 +84,13 @@ export default function CreateComment({ postId }: { postId: string }) {
                 <label className="absolute right-15 cursor-pointer">
                     <IoAttachOutline
                         size={22}
-                        className={imageFile?.[0] ? "text-purple-500" : "text-red-400"}
+                        className={hasImage ? "text-purple-500" : "text-red-400"}
                     />
                     {/* ✅ register بس من غير أي ref تاني */}
                     <input
-                        {...register("image")}
+                        {...register("image", {
+                            onChange: (e) => setHasImage(Boolean(e.target.files?.[0])),
+                        })}
                         type="file"
                         accept="image/*"
                         className="hidden"

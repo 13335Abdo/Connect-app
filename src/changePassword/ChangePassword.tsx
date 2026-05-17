@@ -7,6 +7,7 @@ import axiosInstance from "../lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface FormValues {
   password: string;
@@ -26,7 +27,7 @@ export default function ChangePassword() {
     confirm: false,
   });
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
     defaultValues:{
       password:"",
       newPassword:"",
@@ -45,17 +46,18 @@ export default function ChangePassword() {
       navigate("/")
     },
     onError:(erorr)=>{
-      console.log("erorrrr",erorr.response.data.errors);
-      
-      toast.danger(erorr.response.data.errors)
+      const message = axios.isAxiosError(erorr)
+        ? erorr.response?.data?.errors ?? "unexpected error"
+        : "unexpected error";
+      toast.danger(message)
     }
   })
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-white border border-gray-100 rounded-xl shadow-sm p-6 flex flex-col gap-5">
+    <div className="w-full max-w-md mx-auto mt-6 sm:mt-10 px-4 sm:px-6 py-6 bg-white border border-gray-100 rounded-xl shadow-sm flex flex-col gap-5">
       <h2 className="text-[16px] font-semibold text-gray-900">Change Password</h2>
 
-      <form onSubmit={handleSubmit(mutate)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit((values) => mutate(values))} className="flex flex-col gap-4">
         {/* Old Password */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[13px] font-medium text-gray-700">Old Password</label>

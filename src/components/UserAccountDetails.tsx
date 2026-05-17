@@ -8,7 +8,8 @@ export default function UserAccountDetails({ userAccount }: { userAccount: dataT
     const [follwering, setfollwering] = useState(false)
 
     const { user } = userAccount;
-    console.log("DSFASDF$$$$$$4", user, userAccount);
+    console.log("userddd",user);
+    
 
 
     return (
@@ -27,7 +28,7 @@ export default function UserAccountDetails({ userAccount }: { userAccount: dataT
                         alt={user.name}
                         className="w-20 h-20 rounded-full border-[3px] border-white object-cover shrink-0"
                     />
-                    <FollowButton userAccount={userAccount} />
+                    <FollowButton userId={user._id} />
                 </div>
 
                 {/* Name */}

@@ -1,5 +1,5 @@
 import { Spinner, toast } from "@heroui/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Heart, MoreHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { FaHeart, FaTrash } from "react-icons/fa";
@@ -12,7 +12,7 @@ import EditComponent from "./EditComponent";
 import { Link } from "react-router-dom";
 
 export interface CommentItemProps {
-    isFromReplay?: false
+    isFromReplay?: boolean
     commentCreator: UserType;
     content?: string;
     image?: string;
@@ -59,7 +59,7 @@ export default function CommentItem({ likes, isFromReplay, postId, commentId, co
         mutationKey: ["likeAndUnlikeComment"],
         onSuccess: () => {
 
-            query.invalidateQueries(["GetPostComments", postId])
+            query.invalidateQueries({ queryKey: ["GetPostComments", postId] })
             setIsLiked(!isLiked)
 
         },
@@ -79,7 +79,7 @@ export default function CommentItem({ likes, isFromReplay, postId, commentId, co
         mutationKey: ["deleteComment"],
         onSuccess: (data) => {
             console.log("data", data);
-            query.invalidateQueries(["GetPostComments", postId])
+            query.invalidateQueries({ queryKey: ["GetPostComments", postId] })
 
         },
         onError: () => {
@@ -118,7 +118,7 @@ export default function CommentItem({ likes, isFromReplay, postId, commentId, co
                                         </div>
                                         <p>Edit</p>
                                     </button>
-                                    <button disabled={isPending} onClick={deletmutate} className="flex items-center gap-2 p-1 cursor-pointer bg-gray-300 w-full">
+                                    <button disabled={isPending} onClick={() => deletmutate()} className="flex items-center gap-2 p-1 cursor-pointer bg-gray-300 w-full">
                                         <div>
                                             {isPending ? <Spinner size="md" /> : <FaTrash className="text-red-300" />}
                                         </div>
@@ -156,7 +156,7 @@ export default function CommentItem({ likes, isFromReplay, postId, commentId, co
                     </div>
                 </div>
             </div >
-            {isOpenEdit && <EditComponent setisOpenEdit={setisOpenEdit} postId={postId} commentId={commentId} content={content} image={image} />}
+            {isOpenEdit && <EditComponent setisOpenEdit={setisOpenEdit} postId={postId} commentId={commentId} content={content ?? ""} image={image ?? ""} />}
         </>
     );
 }

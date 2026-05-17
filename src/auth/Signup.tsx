@@ -114,13 +114,13 @@ export default function Signup() {
       </div>
 
       {/* Right Panel - Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-8 py-10 sm:py-12 bg-white">
         <div className="w-full max-w-md">
           <h2 className="text-2xl font-semibold text-gray-800 mb-1">Create account</h2>
           <p className="text-sm text-gray-400 mb-8">Fill in the details below to get started</p>
 
           <form className="flex flex-col gap-4" onSubmit={handleSubmit(handelSubmitform)}>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Controller
                 name="name"
                 control={control}

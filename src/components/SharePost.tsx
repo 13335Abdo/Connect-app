@@ -1,19 +1,23 @@
 import { X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import type { PostType } from "../Home/Home";
 import axiosInstance from "../lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@heroui/react";
+import axios from "axios";
 
 interface Props {
     post: PostType;
     setisOpened: (x: boolean) => void;
 }
+type FormValues = {
+    body: string;
+};
 
 export default function SharePost({ post, setisOpened }: Props) {
     const client = useQueryClient()
-    const { register, handleSubmit } = useForm({
+    const { register, handleSubmit } = useForm<FormValues>({
         defaultValues: { body: "" }
     });
 
@@ -27,7 +31,7 @@ export default function SharePost({ post, setisOpened }: Props) {
         catch { return ""; }
     }, []);
 
-    function onSubmit(values) {
+    function onSubmit(values: FormValues) {
         console.log(values);
         return axiosInstance.post(`/posts/${post._id}/share`,values)
     }
@@ -36,7 +40,7 @@ export default function SharePost({ post, setisOpened }: Props) {
         mutationKey:["sharePost"],
         onSuccess:(data)=>{
             console.log("data from share post",data);
-            client.invalidateQueries(["allposts"])
+            client.invalidateQueries({ queryKey: ["allposts"] })
             
 
             setisOpened(false)
@@ -45,8 +49,10 @@ export default function SharePost({ post, setisOpened }: Props) {
         },
         onError:(erorr)=>{
             setisOpened(false)
-            console.log("erorr",erorr.response.data.errors);
-            toast.danger(erorr.response.data.errors);
+            const message = axios.isAxiosError(erorr)
+                ? erorr.response?.data?.errors ?? "unexpected error"
+                : "unexpected error";
+            toast.danger(message);
         }
     })
 
@@ -56,7 +62,7 @@ export default function SharePost({ post, setisOpened }: Props) {
             onClick={(e) => e.target === e.currentTarget && setisOpened(false)}
         >
             <form
-                onSubmit={handleSubmit(mutate)}
+                onSubmit={handleSubmit((values) => mutate(values))}
                 className="bg-white rounded-xl w-full max-w-[480px] overflow-hidden border border-gray-100 shadow-xl"
             >
                 {/* Header */}
