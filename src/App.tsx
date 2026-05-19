@@ -16,7 +16,7 @@ import Notifications from "./Notifications/Notifications"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import ChangePassword from "./changePassword/ChangePassword"
 import UserData from "./components/UserData"
-import PhotoContext from "./contrext/photoContext"
+import PhotoContext from "./contrext/PhotoContext"
 
 const queryClient = new QueryClient()
 

@@ -4,7 +4,7 @@ import { Image, UploadCloud } from "lucide-react";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import axiosInstance from "../lib/axios";
-import { profilephotoContext } from "../contrext/photoContext";
+import { profilephotoContext } from "../contrext/PhotoContext";
 
 export default function ChangePhoto() {
     const [fileName, setFileName] = useState("");

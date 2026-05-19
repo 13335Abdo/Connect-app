@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { authContext } from "../contrext/AuthContext";
-import { profilephotoContext } from "../contrext/photoContext";
+import { profilephotoContext } from "../contrext/PhotoContext";
 
 const img = "/Gemini_Generated_Image_4viszz4viszz4vis.png";
 

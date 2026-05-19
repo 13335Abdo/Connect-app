@@ -7,7 +7,7 @@ import type { comentFormat } from "./PostDesign";
 import { IoAttachOutline } from "react-icons/io5";
 import { useContext, useMemo, useState } from "react";
 import axios from "axios";
-import { profilephotoContext } from "../contrext/photoContext";
+import { profilephotoContext } from "../contrext/PhotoContext";
 interface LoggedUser {
     photo?: string;
     name?: string;

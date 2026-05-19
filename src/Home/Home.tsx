@@ -8,7 +8,7 @@ import { Spinner } from "@heroui/react";
 import FollowButton from "../components/FollowButton";
 import { Link } from "react-router-dom";
 import { ImagePlus, Search, Sparkles } from "lucide-react";
-import { profilephotoContext } from "../contrext/photoContext";
+import { profilephotoContext } from "../contrext/PhotoContext";
 
 interface FollowData {
   _id: string,

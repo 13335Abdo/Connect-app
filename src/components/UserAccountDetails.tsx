@@ -6,7 +6,7 @@ import UsersListPopup from "./UsersListPopup";
 import ChangeCover from "./ChangeCover";
 import ChangePhoto from "./ChangePhoto";
 import { Cake, CalendarDays, Mail, UserRound } from "lucide-react";
-import { profilephotoContext } from "../contrext/photoContext";
+import { profilephotoContext } from "../contrext/PhotoContext";
 
 export default function UserAccountDetails({ userAccount }: { userAccount: dataTypeOfGetUserProfile }) {
     const [follwers, setfollwers] = useState(false)
