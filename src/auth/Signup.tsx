@@ -1,6 +1,5 @@
 import { Input, Button, RadioGroup, Radio, Label, toast, Spinner } from "@heroui/react";
 import imge from "../assets/signUpimage.avif";
-import img from "../../public/Gemini_Generated_Image_4viszz4viszz4vis.png";
 import { Controller, useForm } from "react-hook-form";
 import axios from 'axios';
 import * as z from "zod"
@@ -8,6 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axiosInstance from "../lib/axios";
+
+const img = "/Gemini_Generated_Image_4viszz4viszz4vis.png";
+
 const schema = z.object({
   name: z.string("name must be string").min(2, "name must be above 2 char"),
   username: z.string("user name must be string").regex(/^[a-z0-9_]{3,30}$/, "Username must be 3-30 characters long and can only contain lowercase letters, numbers, and underscores"),

@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form";
 import axiosInstance from "../lib/axios";
 import type { comentFormat } from "./PostDesign";
 import { IoAttachOutline } from "react-icons/io5";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import axios from "axios";
+import { profilephotoContext } from "../contrext/photoContext";
 interface LoggedUser {
     photo?: string;
     name?: string;
@@ -14,6 +15,8 @@ interface LoggedUser {
 export default function CreateComment({ postId }: { postId: string }) {
     const queryClient = useQueryClient();
     const [hasImage, setHasImage] = useState(false);
+
+    const { profilePicture } = useContext(profilephotoContext)
     const loged = useMemo<LoggedUser | null>(() => {
         try {
             const raw = localStorage.getItem("loggedUser");
@@ -43,7 +46,7 @@ export default function CreateComment({ postId }: { postId: string }) {
         mutationFn: onSubmit,
         onSuccess: (data) => {
             // @ts-ignore
-            queryClient.invalidateQueries(["GetPostComments", postId] );
+            queryClient.invalidateQueries(["GetPostComments", postId]);
             toast.success(data.data.message);
             reset();
         },
@@ -55,17 +58,18 @@ export default function CreateComment({ postId }: { postId: string }) {
         },
     });
     return (
-        <div className="shrink-0 px-4 py-3 border-t border-gray-100 flex items-center gap-2.5">
+        <div className="shrink-0 px-4 py-3 border-t border-slate-100 bg-white flex items-center gap-2.5">
             {/* Avatar */}
-            <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0 overflow-hidden ring-2 ring-slate-100">
                 {loged?.photo ? (
                     <img
-                        src={loged.photo}
+                        // @ts-ignore
+                        src={profilePicture ?? loged.photo}
                         alt={loged.name ?? "User"}
                         className="w-full h-full object-cover"
                     />
                 ) : (
-                    <span className="text-purple-600 text-[11px] font-semibold">
+                    <span className="text-blue-600 text-[11px] font-semibold">
                         {loged?.name?.[0]?.toUpperCase() ?? "?"}
                     </span>
                 )}
@@ -79,13 +83,13 @@ export default function CreateComment({ postId }: { postId: string }) {
                     {...register("content")}
                     type="text"
                     placeholder="Write a comment..."
-                    className="flex-1 text-[13px] bg-gray-50 border border-gray-200 rounded-full px-4 py-2 pr-10 outline-none focus:border-purple-300 transition-colors"
+                    className="flex-1 text-[13px] bg-slate-50 border border-slate-200 rounded-full px-4 py-2.5 pr-10 outline-none focus:border-blue-300 focus:bg-white transition-colors"
                 />
                 {/* File Input */}
                 <label className="absolute right-15 cursor-pointer">
                     <IoAttachOutline
                         size={22}
-                        className={hasImage ? "text-purple-500" : "text-red-400"}
+                        className={hasImage ? "text-blue-500" : "text-slate-400"}
                     />
                     {/* ✅ register بس من غير أي ref تاني */}
                     <input
@@ -100,7 +104,7 @@ export default function CreateComment({ postId }: { postId: string }) {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-8 h-8 cursor-pointer rounded-full bg-purple-500 hover:bg-purple-600 flex items-center justify-center transition-colors shrink-0"
+                    className="w-9 h-9 cursor-pointer rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors shrink-0 shadow-sm shadow-blue-200"
                 >
                     {isPending ? (
                         <Spinner size="sm" className="text-white" />

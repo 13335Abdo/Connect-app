@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { FaHeart } from "react-icons/fa";
 import axiosInstance from "../lib/axios";
+import FollowButton from "./FollowButton";
+import { Link } from "react-router-dom";
 
 interface LikedUser {
     _id: string;
@@ -20,7 +22,7 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
 
     // 📌 دي list بالـ IDs بتاعت الناس اللي عملتلهم follow
     // مثلاً: ["abc123", "xyz456"]
-    
+
 
     async function getLikes() {
         return (await axiosInstance.get(`/posts/${postId}/likes?page=1&limit=20`)).data;
@@ -79,23 +81,26 @@ export default function GetPostLikes({ setisOpened, postId }: Props) {
                         {likes.map((user) => {
 
                             return (
-                                <div key={user._id} className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors">
-                                    {/* Avatar */}
-                                    <div className="relative shrink-0">
-                                        <img src={user.photo} alt={user.name} className="w-10 h-10 rounded-full object-cover" />
-                                        <div className="absolute -bottom-0.5 -right-0.5 w-[18px] h-[18px] bg-red-500 rounded-full flex items-center justify-center border-2 border-white">
-                                            <FaHeart size={8} className="text-white" />
+                                <div key={user._id} className="flex justify-between items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors">
+                                    <Link to={`/userData/${user._id}`} className="flex items-center gap-3">
+                                        {/* Avatar */}
+                                        <div className="relative shrink-0">
+                                            <img src={user.photo} alt={user.name} className="w-10 h-10 rounded-full object-cover" />
+                                            <div className="absolute -bottom-0.5 -right-0.5 w-[18px] h-[18px] bg-red-500 rounded-full flex items-center justify-center border-2 border-white">
+                                                <FaHeart size={8} className="text-white" />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* Info */}
-                                    <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                                        <span className="text-[14px] font-medium text-gray-900 truncate">{user.name}</span>
-                                        <span className="text-[12px] text-gray-400">@{user.username}</span>
-                                    </div>
+                                        {/* Info */}
+                                        <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                                            <span className="text-[14px] font-medium text-gray-900 truncate">{user.name}</span>
+                                            <span className="text-[12px] text-gray-400">@{user.username}</span>
+                                        </div>
+                                    </Link>
+                                    <FollowButton userId={user._id}/>
 
                                     {/* 📌 لو ده انت مش هيظهر زرار follow */}
-                                    
+
                                 </div>
                             );
                         })}

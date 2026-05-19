@@ -93,7 +93,7 @@ export default function UserData() {
 
     return (
 
-        <div className="w-full max-w-2xl mx-auto mt-2 px-3 sm:px-4 relative">
+        <div className="w-full max-w-2xl mx-auto py-5 px-3 sm:px-4 relative">
 
             <UserAccountDetails userAccount={data.data} />
             <UserPosts userId={userId} />

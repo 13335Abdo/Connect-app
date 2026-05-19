@@ -47,15 +47,9 @@ export default function ReplayComments({ postId, commentId }: { commentId: strin
     return (
         <>
 
-            {isLoading ? <Loading /> : <div>
+            {isLoading ? <Loading /> : <div className="mt-3 space-y-3 border-l-2 border-slate-200 pl-3">
 
                 {replies?.map((replay) => (<>
-                    <div className="h-px w-5 absolute top-7 inset-s-4 bg-gray-500 rotate-90">
-
-                    </div>
-                    <div className="h-px w-5 absolute top-[38px] inset-s-7 bg-gray-500">
-
-                    </div>
                     <CommentItem
                         isFromReplay={true}
                         key={replay.commentId}

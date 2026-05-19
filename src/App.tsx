@@ -16,6 +16,7 @@ import Notifications from "./Notifications/Notifications"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import ChangePassword from "./changePassword/ChangePassword"
 import UserData from "./components/UserData"
+import PhotoContext from "./contrext/photoContext"
 
 const queryClient = new QueryClient()
 
@@ -40,14 +41,17 @@ function App() {
     <>
       <AuthContext>
         <UserContext>
-          <QueryClientProvider client={queryClient}>
+          <PhotoContext>
 
-            <Toast.Provider placement="top" />
+            <QueryClientProvider client={queryClient}>
+
+              <Toast.Provider placement="top" />
 
 
-            <RouterProvider router={router} />
-            
-          </QueryClientProvider>
+              <RouterProvider router={router} />
+
+            </QueryClientProvider>
+          </PhotoContext>
         </UserContext>
 
       </AuthContext>

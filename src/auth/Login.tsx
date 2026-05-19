@@ -1,6 +1,5 @@
 import { Input, Button, Label, toast, Spinner } from "@heroui/react";
 import imge from "../assets/signUpimage.avif";
-import img from "../../public/Gemini_Generated_Image_4viszz4viszz4vis.png";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { authContext } from "../contrext/AuthContext";
 import axiosInstance from "../lib/axios";
+
+const img = "/Gemini_Generated_Image_4viszz4viszz4vis.png";
 
 const schema = z.object(
   {

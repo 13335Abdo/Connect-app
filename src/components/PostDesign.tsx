@@ -93,7 +93,7 @@ export default function PostDesign({ post }: { post: PostType }) {
 
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg mb-3 overflow-hidden">
+        <article className="bg-white border border-white/80 rounded-2xl mb-4 overflow-hidden shadow-sm shadow-slate-200/80 transition hover:shadow-md hover:shadow-slate-200/90">
             <PostSummary
                 post={post}
                 showControls
@@ -102,14 +102,14 @@ export default function PostDesign({ post }: { post: PostType }) {
 
             {/* Stats Row */}
 
-            <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100">
-                <button onClick={()=>IkeGetLikesOpen(!GetLikesOpen)} className="cursor-pointer flex items-center gap-1.5 hover:underline">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
+                <button onClick={()=>IkeGetLikesOpen(!GetLikesOpen)} className="cursor-pointer flex items-center gap-1.5 rounded-full px-2 py-1 text-slate-500 hover:bg-red-50 hover:text-red-500">
                     <Heart size={16} className={`transition-colors fill-red-500 text-red-500`} />
-                    <span className="text-[13px] text-gray-500">{post.likesCount}</span>
+                    <span className="text-[13px] font-semibold">{post.likesCount}</span>
                 </button>
-                <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1.5 text-gray-500 text-[13px]">{post.commentsCount} comments</span>
-                    <span className="flex items-center gap-1.5 text-gray-500 text-[13px]">{post.sharesCount} shares</span>
+                <div className="flex items-center gap-3 text-[13px] font-medium text-slate-500">
+                    <span className="flex items-center gap-1.5">{post.commentsCount} comments</span>
+                    <span className="flex items-center gap-1.5">{post.sharesCount} shares</span>
                 </div>
             </div>
             {GetLikesOpen&&<GetPostLikes postId={post._id} setisOpened={IkeGetLikesOpen} />}
@@ -117,20 +117,20 @@ export default function PostDesign({ post }: { post: PostType }) {
 
 
             {/* Actions Row */}
-            <div className="grid grid-cols-4 border-t border-gray-100 mx-2 mb-1">
+            <div className="grid grid-cols-2 gap-1 border-t border-slate-100 px-2 py-2 sm:grid-cols-4">
                 <button
                     onClick={() => { mutate() }}
-                    className={`flex cursor-pointer items-center justify-center gap-2 py-2 rounded-md text-[13px] font-semibold hover:bg-gray-100 transition-colors ${isLiked ? "text-red-500" : "text-gray-600"}`}
+                    className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-semibold transition-colors ${isLiked ? "bg-red-50 text-red-500" : "text-slate-600 hover:bg-slate-100"}`}
                 >
                     {isPending ? <Spinner /> : <Heart size={18} className={isLiked ? "fill-red-500" : ""} />}
                     Like
                 </button>
                 <CommentPopup isOpen={isOpen} setIsOpen={setIsOpen} post={post} />
-                <button onClick={() => setisOpened(true)} className="cursor-pointer flex items-center justify-center gap-2 py-2 rounded-md text-[13px] font-semibold text-gray-600 hover:bg-gray-100 transition-colors">
+                <button onClick={() => setisOpened(true)} className="cursor-pointer flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-semibold text-slate-600 transition-colors hover:bg-slate-100">
                     <Share2 size={18} />
                     Share
                 </button>
-                <button onClick={() => markMutate()} className={`cursor-pointer flex items-center justify-center gap-2 py-2 rounded-md text-[13px] font-semibold ${isSaved ? "text-blue-600" : "text-gray-600"} hover:bg-gray-100 transition-colors`}>
+                <button onClick={() => markMutate()} className={`cursor-pointer flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-semibold ${isSaved ? "bg-blue-50 text-blue-600" : "text-slate-600 hover:bg-slate-100"} transition-colors`}>
                     {isSaved ? <FaBookmark size={18} color="blue" /> : <FaRegBookmark size={18} />}
                     Bookmark
                 </button>
@@ -141,20 +141,20 @@ export default function PostDesign({ post }: { post: PostType }) {
 
             {/* Top Comment */}
             {post.topComment && (
-                <div className="mx-4 mb-3 border-s-3 border-blue-400 mt-1 flex flex-col gap-2 bg-gray-50 rounded-lg px-3 py-2.5">
+                <div className="mx-4 mb-4 border-s-3 border-blue-400 mt-1 flex flex-col gap-2 bg-blue-50/60 rounded-xl px-3 py-3">
                     <div className="flex items-center gap-2">
                         <div>
-                            <img src={post.topComment.commentCreator.photo} alt={post.topComment.commentCreator.name} className="w-7 h-7 rounded-full object-cover shrink-0 mt-0.5" />
+                            <img src={post.topComment.commentCreator.photo} alt={post.topComment.commentCreator.name} className="w-8 h-8 rounded-full object-cover shrink-0 mt-0.5 ring-2 ring-white" />
                         </div>
-                        <div className="text-[12px] font-semibold text-gray-800">{post.topComment.commentCreator.name}</div>
+                        <div className="text-[12px] font-semibold text-slate-800">{post.topComment.commentCreator.name}</div>
                     </div>
 
                     <div className="ms-10">
-                        <p className="text-[13px] text-gray-700 mt-0.5 leading-snug">{post.topComment.content}</p>
-                        {post.topComment?.image && <img src={post.topComment?.image} alt={post.topComment.commentCreator.name} className="rounded-lg w-20 h-20" />}
+                        <p className="text-[13px] text-slate-700 mt-0.5 leading-snug">{post.topComment.content}</p>
+                        {post.topComment?.image && <img src={post.topComment?.image} alt={post.topComment.commentCreator.name} className="rounded-xl w-24 h-24 object-cover mt-2" />}
                     </div>
                 </div>
             )}
-        </div>
+        </article>
     );
 }

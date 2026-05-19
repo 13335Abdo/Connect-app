@@ -56,22 +56,22 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
 
     return (
         <>
-            <button onClick={() => setisOpen(true)} className="hover:text-blue-500 transition-colors cursor-pointer">replay</button>
+            <button onClick={() => setisOpen(true)} className="hover:text-blue-500 transition-colors cursor-pointer">reply</button>
             {isOpen && <form
                 onSubmit={handleSubmit((values) => mutate(values))}
-                className="relative flex items-center gap-2.5 flex-1"
+                className="relative mt-2 flex items-center gap-2.5 flex-1"
             >
                 <input
                     {...register("content")}
                     type="text"
                     placeholder="Write a comment..."
-                    className="flex-1 text-[13px] bg-gray-50 border border-gray-200 rounded-full px-4 py-2 pr-10 outline-none focus:border-purple-300 transition-colors"
+                    className="flex-1 text-[13px] bg-white border border-slate-200 rounded-full px-4 py-2 pr-10 outline-none focus:border-blue-300 transition-colors shadow-sm"
                 />
                 {/* File Input */}
                 <label className="absolute right-15 cursor-pointer">
                     <IoAttachOutline
                         size={22}
-                        className={imageFile?.[0] ? "text-purple-500" : "text-red-400"}
+                        className={imageFile?.[0] ? "text-blue-500" : "text-slate-400"}
                     />
                     {/* ✅ register بس من غير أي ref تاني */}
                     <input
@@ -84,7 +84,7 @@ export default function CreateReplayComment({ postId, commentId }: { postId: str
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-8 h-8 cursor-pointer rounded-full bg-purple-500 hover:bg-purple-600 flex items-center justify-center transition-colors shrink-0"
+                    className="w-8 h-8 cursor-pointer rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors shrink-0 shadow-sm shadow-blue-200"
                 >
                     {isPending ? (
                         <Spinner size="sm" className="text-white" />

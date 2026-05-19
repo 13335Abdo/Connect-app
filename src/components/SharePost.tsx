@@ -58,17 +58,17 @@ export default function SharePost({ post, setisOpened }: Props) {
 
     return (
         <div
-            className="fixed inset-0 z-50 bg-black/45 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-slate-950/55 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={(e) => e.target === e.currentTarget && setisOpened(false)}
         >
             <form
                 onSubmit={handleSubmit((values) => mutate(values))}
-                className="bg-white rounded-xl w-full max-w-[480px] overflow-hidden border border-gray-100 shadow-xl"
+                className="bg-white rounded-2xl w-full max-w-[480px] overflow-hidden border border-white/80 shadow-2xl shadow-slate-950/20"
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100">
-                    <span className="text-[15px] font-semibold text-gray-900">Share post</span>
-                    <button type="button" onClick={() => setisOpened(false)} className="cursor-pointer w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                    <span className="text-[15px] font-bold text-slate-900">Share post</span>
+                    <button type="button" onClick={() => setisOpened(false)} className="cursor-pointer w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors">
                         <X size={16} />
                     </button>
                 </div>
@@ -77,35 +77,35 @@ export default function SharePost({ post, setisOpened }: Props) {
                 <div className="p-4 flex flex-col gap-4">
                     {/* User */}
                     <div className="flex items-center gap-2.5">
-                        <img src={userPhoto} alt={userName} className="w-10 h-10 rounded-full object-cover shrink-0" />
-                        <span className="text-[14px] font-medium text-gray-900">{userName}</span>
+                        <img src={userPhoto} alt={userName} className="w-11 h-11 rounded-full object-cover shrink-0 ring-2 ring-slate-100" />
+                        <span className="text-[14px] font-bold text-slate-900">{userName}</span>
                     </div>
 
                     {/* Input */}
                     <textarea
                         {...register("body")}
                         placeholder="Say something about this..."
-                        className="w-full min-h-[80px] bg-transparent border-none outline-none resize-none text-[15px] text-gray-800 placeholder:text-gray-400 leading-relaxed"
+                        className="w-full min-h-[90px] bg-transparent border-none outline-none resize-none text-[15px] text-slate-800 placeholder:text-slate-400 leading-relaxed"
                     />
 
                     {/* Original post preview */}
-                    <div className="border border-gray-200 rounded-lg p-3 flex flex-col gap-2 bg-gray-50">
+                    <div className="border border-slate-200 rounded-2xl p-3 flex flex-col gap-2 bg-slate-50">
                         <div className="flex items-center gap-2">
-                            <img src={post.user.photo} alt={post.user.name} className="w-7 h-7 rounded-full object-cover shrink-0" />
+                            <img src={post.user.photo} alt={post.user.name} className="w-8 h-8 rounded-full object-cover shrink-0 ring-2 ring-white" />
                             <div>
-                                <p className="text-[12px] font-semibold text-gray-900">{post.user.name}</p>
-                                <p className="text-[11px] text-gray-400">{new Date(post.createdAt).toLocaleString("eg", { year: "numeric", day: "numeric", month: "short" })}</p>
+                                <p className="text-[12px] font-semibold text-slate-900">{post.user.name}</p>
+                                <p className="text-[11px] text-slate-400">{new Date(post.createdAt).toLocaleString("eg", { year: "numeric", day: "numeric", month: "short" })}</p>
                             </div>
                         </div>
-                        {post.body && <p className="text-[13px] text-gray-600 leading-relaxed">{post.body}</p>}
-                        {post.image && <img src={post.image} alt="post" className="w-full h-32 object-cover rounded-md" />}
+                        {post.body && <p className="text-[13px] text-slate-600 leading-relaxed">{post.body}</p>}
+                        {post.image && <img src={post.image} alt="post" className="w-full h-36 object-cover rounded-xl" />}
                     </div>
 
-                    <div className="h-px bg-gray-100" />
+                    <div className="h-px bg-slate-100" />
 
                     {/* Footer */}
                     <div className="flex justify-end">
-                        <button disabled={isPending} type="submit" className="bg-purple-500 hover:bg-purple-600 text-white text-[14px] font-medium px-5 py-2 rounded-full transition-colors cursor-pointer">
+                        <button disabled={isPending} type="submit" className="bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-bold px-5 py-2.5 rounded-full transition-colors cursor-pointer shadow-sm shadow-blue-200 disabled:opacity-70">
                            {isPending? "Loading..." : "Share now" } 
                         </button>
                     </div>
