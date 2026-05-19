@@ -32,7 +32,7 @@ export default function UserAccountDetails({ userAccount }: { userAccount: dataT
             {/* Cover */}
             <div className="flex relative group">
 
-                {userId == user._id ? <img src={coverphoto ?? user.cover} alt="cover" className="w-full h-56 object-cover" /> :
+                {userId == user._id ? <img src={coverphoto??user.cover} alt="cover" className="w-full h-56 object-cover" /> :
                     <>
                         {
                             user.cover
